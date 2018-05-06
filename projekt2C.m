@@ -94,27 +94,32 @@ dokladnosc=-1:0.0001:1;
 funcA = 1 ./ ( 1 + exp ( -beta * dokladnosc ) ) ;
 funcP = beta*(1-funcA).*funcA;
     
+plotrows = 4;
+plotcolumns = 3
+
 figure
-subplot(2,2,1)
+subplot(plotrows,plotcolumns,10)
 plot(dokladnosc,funcA,'g')
 axis([-1 1 0 1])  
 xlabel('x')
 ylabel('f(x)')
 title('Funkcja aktywacji')
 
-subplot(2,2,2)
+
+subplot(plotrows,plotcolumns,11)
 plot(dokladnosc,funcP,'g')
 axis([-1 1 0 5])
 xlabel('x')
 ylabel('df(x)/dx')
 title('Pochodna funkcji aktywacji')
 
-subplot(2,2,3)
+
+subplot(plotrows,plotcolumns,1:6)
 plot(1:liczbaEpok,SkutecznoscEpoki,'g')
 axis([0 liczbaEpok 0 100])  
 xlabel('Liczba epok')
-ylabel('Skutecznoœæ klasyfikacji w %')
-title('Skutecznoœæ sieci')
+ylabel('Skutecznosc klasyfikacji w %')
+title('Skutecznosc sieci')
 
 wynik=['o','o','o','o'];
 for i=1:4
@@ -123,7 +128,7 @@ for i=1:4
     end
 end
 
-subplot(2,2,4)
+subplot(plotrows,plotcolumns,12)
 plot(In (1,1),In (2,1),wynik(1,1),In (1,2),In (2,2),wynik(1,2),In (1,3),In (2,3),wynik(1,3),In (1,4),In (2,4),wynik(1,4))
 axis([-0.1 1.1 -0.1 1.1]) 
 title('Wynik XOR')
