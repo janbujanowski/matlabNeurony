@@ -17,7 +17,7 @@ wynik = 0;
 [ Y1 , Y2c ] = dzialaj2 ( beta, bias1, bias2, W1przed , W2przed , In (:,3) ) ;
 [ Y1 , Y2d ] = dzialaj2 ( beta, bias1, bias2, W1przed , W2przed , In (:,4) ) ;
 Yprzed = [ Y2a , Y2b , Y2c , Y2d ];
-YprzedUczeniem = f_graniczna(Yprzed,0.5)
+YprzedUczeniem = round(Yprzed,0)
 
 index = 1;
 losoweIndexy = [1,2,3,4];
@@ -75,7 +75,7 @@ W2po = W2 ;
         W1przed = W1po;
         W2przed = W2po;
         Ypo = [ Y2a , Y2b , Y2c , Y2d ];
-        YpoUczeniu = f_graniczna(Ypo,0.5);
+        YpoUczeniu = round(Ypo,0);
 
         for i=1:4
             if Out(i)==YpoUczeniu(i) 
