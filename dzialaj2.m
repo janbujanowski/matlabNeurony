@@ -17,13 +17,6 @@ U2 = W2' * X2 ;
 Y2 = 1 ./ ( 1 + exp ( -beta * U2 ) ) ;
 
 
-% dla bipolarnej: f(x) = [ 1 - e^(Beta * x)] / [ 1 + e^(-Beta * x)]
-% Ÿród³o: https://pl.wikipedia.org/wiki/Funkcja_aktywacji
-% Y1 =  ( 1 - exp ( -beta * U1 ) ) ./ ( 1 + exp ( -beta * U1 ) ) ; 
-% X2 = [ bias2 ; Y1 ] ;
-% U2 = W2' * X2 ;
-% Y2 = ( 1 - exp ( -beta * U2 ) ) ./ ( 1 + exp ( -beta * U2 ) ) ; 
-
  
  
  

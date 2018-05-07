@@ -9,7 +9,13 @@ liczbaEpok = 1000;
 SkutecznoscEpoki=zeros(1,liczbaEpok);
 skutecznosc=0;
 wynik = 0;
-[ W1przed , W2przed ] = init2 ( 2 , 2 , 1 );
+
+
+W1a = randn(3,1)/2;
+W1b = randn(3,1)/2;
+W1przed = [W1a,W1b];
+W2przed = randn(3,1);
+%[ W1przed , W2przed ] = init2 ( 2 , 2 , 1 );
 
 %wynik sieci przed uczeniem
 [ Y1 , Y2a ] = dzialaj2 ( beta, bias1, bias2, W1przed , W2przed , In (:,1) ) ;
@@ -19,18 +25,19 @@ wynik = 0;
 Yprzed = [ Y2a , Y2b , Y2c , Y2d ];
 YprzedUczeniem = round(Yprzed,0)
 
-index = 1;
-losoweIndexy = [1,2,3,4];
-losoweIndexy = losoweIndexy(randperm(length(losoweIndexy)));
+blad = zeros(2,liczbaEpok);
+%index = 1;
+%losoweIndexy = [1,2,3,4];
+%losoweIndexy = losoweIndexy(randperm(length(losoweIndexy)));
+
+W1po = W1przed;
+W2po = W2przed;
 for j=1:liczbaEpok
         skutecznosc = 0;
         %[ W1po , W2po ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1przed , W2przed , In , Out , losoweIndexy(index) );
-        index = index + 1;
-         if index > length(losoweIndexy)
-            index = 1;
-            losoweIndexy = losoweIndexy(randperm(length(losoweIndexy)));
-        end
-        % funkcja uczy sieæ dwuwarstwow¹ na podanym ci¹gu ucz¹cym (P,T)
+        nrwejscia = mod(j,4)+ 1;
+
+% funkcja uczy sieæ dwuwarstwow¹ na podanym ci¹gu ucz¹cym (P,T)
 % przez zadan¹ liczbê epok (n)
 % parametry: W1przed - macierz wag warstwy 1 przed uczeniem
 % P - ci¹g ucz¹cy - przyk³ady - wejœcia
@@ -38,19 +45,21 @@ for j=1:liczbaEpok
 % n - liczba epok
 % wynik: W1po – macierz wag warstwy 1 po uczeniu
 % W2po – macierz wag warstwy 2 po uczeniu
-W1 = W1przed ;
-W2 = W2przed ;
+W1 = W1po ;
+W2 = W2po ;
 wierW2 = size(W2,1) ; % liczba wierszy macierzy W2
 
 % podaj przyk³ad na wejœcia...
-X = In(:,losoweIndexy(index)) ; % wejœcia sieci
+X = In(:,nrwejscia) ; % wejœcia sieci
 % ...i oblicz wyjœcia
 [ Y1 , Y2 ] = dzialaj2 ( beta, bias1, bias2, W1 , W2 , X ) ;
 X1 = [ -1 ; X ] ; % wejœcia warstwy 1
 X2 = [ -1 ; Y1 ] ; % wejœcia warstwy 2
-D2 = Out(:,losoweIndexy(index)) - Y2 ; % oblicz b³êdy dla warstwy 2
+D2 = Out(:,nrwejscia) - Y2 ; % oblicz b³êdy dla warstwy 2
 D1 = W2(2:wierW2,:) * D2 ; % oblicz b³êdy dla warstwy 1
 
+blad(1,j) = D2(1);
+blad(2,j) = D1(1);
 funcA2 = 1 ./ ( 1 + exp ( -beta * X2) ) ;
 funcP2 = beta*(1-funcA2).*funcA2;
 
@@ -72,11 +81,9 @@ W2po = W2 ;
         [ Y1 , Y2b ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
         [ Y1 , Y2c ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
         [ Y1 , Y2d ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
-        W1przed = W1po;
-        W2przed = W2po;
+        
         Ypo = [ Y2a , Y2b , Y2c , Y2d ];
         YpoUczeniu = round(Ypo,0);
-
         for i=1:4
             if Out(i)==YpoUczeniu(i) 
              skutecznosc=skutecznosc+1;
@@ -86,7 +93,7 @@ W2po = W2 ;
 end
 YpoUczeniu
 SkutecznoscProcentowa = skutecznosc * 25;
-disp(sprintf('Skutecznoœæ = %d%%',SkutecznoscProcentowa));
+disp(sprintf('Skutecznosc = %d%%',SkutecznoscProcentowa));
 
 dokladnosc=-1:0.0001:1;
 
@@ -95,8 +102,16 @@ funcA = 1 ./ ( 1 + exp ( -beta * dokladnosc ) ) ;
 funcP = beta*(1-funcA).*funcA;
     
 plotrows = 4;
-plotcolumns = 3
+plotcolumns = 3;
 
+
+figure
+plot(1:liczbaEpok,blad(1,1:liczbaEpok));
+% axis([0 1000 -1 1 ])
+ hold on
+plot(1:liczbaEpok,blad(2,1:liczbaEpok));
+ hold off
+title('Blad na wagach')
 figure
 subplot(plotrows,plotcolumns,10)
 plot(dokladnosc,funcA,'g')
@@ -104,7 +119,6 @@ axis([-1 1 0 1])
 xlabel('x')
 ylabel('f(x)')
 title('Funkcja aktywacji')
-
 
 subplot(plotrows,plotcolumns,11)
 plot(dokladnosc,funcP,'g')
