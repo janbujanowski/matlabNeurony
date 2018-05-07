@@ -3,7 +3,7 @@ Out = dlmread ('target1.txt')
 beta = 10;
 bias1 = -1;
 bias2 = -1;
-wspUcz = 0.05;
+wspUcz = 0.15;
 
 liczbaEpok = 1000;
 SkutecznoscEpoki=zeros(1,liczbaEpok);
@@ -11,11 +11,11 @@ skutecznosc=0;
 wynik = 0;
 
 
-W1a = randn(3,1)/2;
-W1b = randn(3,1)/2;
-W1przed = [W1a,W1b];
-W2przed = randn(3,1);
-%[ W1przed , W2przed ] = init2 ( 2 , 2 , 1 );
+% W1a = randn(3,1)/2;
+% W1b = randn(3,1)/2;
+% W1przed = [W1a,W1b];
+% W2przed = randn(3,1);
+[ W1przed , W2przed ] = init2 ( 2 , 2 , 1 );
 
 %wynik sieci przed uczeniem
 [ Y1 , Y2a ] = dzialaj2 ( beta, bias1, bias2, W1przed , W2przed , In (:,1) ) ;
