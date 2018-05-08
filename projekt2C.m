@@ -10,7 +10,9 @@ SkutecznoscEpoki=zeros(2,liczbaEpok);
 skutecznosc=0;
 wynik = 0;
 
-
+%100% dla wielomianu uda³o siê nauczyæ :
+% W1 = [0.046232539369607 0.904045586855245;0.951166773369903 1.043810180720127;-1.192796752294291 -0.748014324612826];
+% W2 = [-1.331716564497053;0.887554057441470;-0.475863799191821];
 % W1a = randn(3,1)/2;
 % W1b = randn(3,1)/2;
 % W1przed = [W1a,W1b];
@@ -39,14 +41,20 @@ for j=1:liczbaEpok
         skutecznosc = 0;
         %nrwejscia = mod(j,4)+ 1;
         nrwejscia = randi([1 4],1);
-        [ W1po , W2po,blad1,blad2 ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
+        %[ W1po , W2po,blad1,blad2 ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
+        [ W1po , W2po,blad1,blad2 ] = uczenieWielomian ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
         blad(1,j) = blad1(1);
         blad(2,j) = blad2;
         % sprawdzenie dzia³ania sieci po uczeniu
-        [ Y1 , Y2a ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
-        [ Y1 , Y2b ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
-        [ Y1 , Y2c ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
-        [ Y1 , Y2d ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
+%         [ Y1 , Y2a ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
+%         [ Y1 , Y2b ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
+%         [ Y1 , Y2c ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
+%         [ Y1 , Y2d ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
+        
+        [ Y1 , Y2a ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
+        [ Y1 , Y2b ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
+        [ Y1 , Y2c ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
+        [ Y1 , Y2d ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
         
         W1 = W1po;
         W2 = W2po;
