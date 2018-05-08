@@ -6,7 +6,7 @@ bias2 = -1;
 wspUcz = 0.15;  
 
 liczbaEpok = 1000;
-SkutecznoscEpoki=zeros(1,liczbaEpok);
+SkutecznoscEpoki=zeros(2,liczbaEpok);
 skutecznosc=0;
 wynik = 0;
 
@@ -40,7 +40,7 @@ for j=1:liczbaEpok
         %nrwejscia = mod(j,4)+ 1;
         nrwejscia = randi([1 4],1);
         [ W1po , W2po,blad1,blad2 ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
-        blad(1,j) = blad1;
+        blad(1,j) = blad1(1);
         blad(2,j) = blad2;
         % sprawdzenie dzia³ania sieci po uczeniu
         [ Y1 , Y2a ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
