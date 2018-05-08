@@ -41,24 +41,26 @@ for j=1:liczbaEpok
         skutecznosc = 0;
         %nrwejscia = mod(j,4)+ 1;
         nrwejscia = randi([1 4],1);
-        %[ W1po , W2po,blad1,blad2 ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
-        [ W1po , W2po,blad1,blad2 ] = uczenieWielomian ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
+        [ W1po , W2po,blad1,blad2 ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
+%         [ W1po , W2po,blad1,blad2 ] = uczenieWielomian ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
         blad(1,j) = blad1(1);
         blad(2,j) = blad2;
         % sprawdzenie dzia³ania sieci po uczeniu
-%         [ Y1 , Y2a ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
-%         [ Y1 , Y2b ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
-%         [ Y1 , Y2c ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
-%         [ Y1 , Y2d ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
+        [ Y1 , Y2a ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
+        [ Y1 , Y2b ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
+        [ Y1 , Y2c ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
+        [ Y1 , Y2d ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
         
-        [ Y1 , Y2a ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
-        [ Y1 , Y2b ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
-        [ Y1 , Y2c ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
-        [ Y1 , Y2d ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
+        
+%         [ Y1 , Y2a ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
+%         [ Y1 , Y2b ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
+%         [ Y1 , Y2c ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
+%         [ Y1 , Y2d ] = dzialajWielomian ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
         
         W1 = W1po;
         W2 = W2po;
         Ypo = [ Y2a , Y2b , Y2c , Y2d ];
+        MSE(1,j) = sqrt((Out(nrwejscia) - Ypo(nrwejscia))^2);
         YpoUczeniu = round(Ypo,0);
         for i=1:4
             if Out(i)==YpoUczeniu(i) 
@@ -71,22 +73,22 @@ YpoUczeniu
 SkutecznoscProcentowa = skutecznosc * 25;
 disp(sprintf('Skutecznosc = %d%%',SkutecznoscProcentowa));
 
-dokladnosc=-1:0.0001:1;
 
-%funkcja unipolarna:
+%Wykresiki rysowanie i takie tam
+dokladnosc=-1:0.0001:1;
+%funkcja unipolarna wartosci do wykresu:
 funcA = 1 ./ ( 1 + exp ( -beta * dokladnosc ) ) ;
 funcP = beta*(1-funcA).*funcA;
     
 plotrows = 4;
 plotcolumns = 3;
 
-
 figure
-plot(1:liczbaEpok,blad(1,1:liczbaEpok));
+plot(1:liczbaEpok,MSE(1,1:liczbaEpok));
 % axis([0 1000 -1 1 ])
- hold on
-plot(1:liczbaEpok,blad(2,1:liczbaEpok));
- hold off
+%  hold on
+% plot(1:liczbaEpok,blad(2,1:liczbaEpok));
+%  hold off
 title('Blad na wagach')
 figure
 subplot(plotrows,plotcolumns,10)
