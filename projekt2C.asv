@@ -54,7 +54,6 @@ wierW2 = size(W2,1) ; % liczba wierszy macierzy W2
 X = In(:,nrwejscia) ; % wejœcia sieci
 % ...i oblicz wyjœcia
 [ Y1 , Y2 ] = dzialaj2 ( beta, bias1, bias2, W1 , W2 , X ) ;
-
 X1 = [ -1 ; X ] ; % wejœcia warstwy 1
 X2 = [ -1 ; Y1 ] ; % wejœcia warstwy 2
 D2 = Out(:,nrwejscia) - Y2; 
