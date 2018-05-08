@@ -1,4 +1,4 @@
-function [ W1po , W2po ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1przed , W2przed , P , T, nrPrzykladu )
+function [ W1po , W2po,blad1,blad2 ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1przed , W2przed , P , T, nrPrzykladu,blad1,blad2 )
 % funkcja uczy sieæ dwuwarstwow¹ na podanym ci¹gu ucz¹cym (P,T)
 % przez zadan¹ liczbê epok (n)
 % parametry: W1przed - macierz wag warstwy 1 przed uczeniem
@@ -19,6 +19,8 @@ X1 = [ -1 ; X ] ; % wejœcia warstwy 1
 X2 = [ -1 ; Y1 ] ; % wejœcia warstwy 2
 D2 = T(:,nrPrzykladu) - Y2 ; % oblicz b³êdy dla warstwy 2
 D1 = W2(2:wierW2,:) * D2 ; % oblicz b³êdy dla warstwy 1
+blad2 = D2;
+blad1 = D1;
 
 funcA2 = 1 ./ ( 1 + exp ( -beta * X2) ) ;
 funcP2 = beta*(1-funcA2).*funcA2;

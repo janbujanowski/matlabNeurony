@@ -3,7 +3,7 @@ Out = dlmread ('target1.txt')
 beta = 10;
 bias1 = -1;
 bias2 = -1;
-wspUcz = 0.15;
+wspUcz = 0.15;  
 
 liczbaEpok = 1000;
 SkutecznoscEpoki=zeros(1,liczbaEpok);
@@ -25,65 +25,31 @@ wynik = 0;
 Yprzed = [ Y2a , Y2b , Y2c , Y2d ];
 YprzedUczeniem = round(Yprzed,0)
 
-[ Y1w , Y2aw ] = dzialajWielomian ( beta, bias1, bias2, W1przed , W2przed , In (:,1) ) ;
-[ Y1w , Y2bw ] = dzialajWielomian ( beta, bias1, bias2, W1przed , W2przed , In (:,2) ) ;
-[ Y1w , Y2cw ] = dzialajWielomian ( beta, bias1, bias2, W1przed , W2przed , In (:,3) ) ;
-[ Y1w , Y2dw ] = dzialajWielomian ( beta, bias1, bias2, W1przed , W2przed , In (:,4) ) ;
-YprzedW = [ Y2aw , Y2bw , Y2cw , Y2dw ];
-YprzedUczeniemW = round(YprzedW,0)
+% [ Y1w , Y2aw ] = dzialajWielomian ( beta, bias1, bias2, W1przed , W2przed , In (:,1) ) ;
+% [ Y1w , Y2bw ] = dzialajWielomian ( beta, bias1, bias2, W1przed , W2przed , In (:,2) ) ;
+% [ Y1w , Y2cw ] = dzialajWielomian ( beta, bias1, bias2, W1przed , W2przed , In (:,3) ) ;
+% [ Y1w , Y2dw ] = dzialajWielomian ( beta, bias1, bias2, W1przed , W2przed , In (:,4) ) ;
+% YprzedW = [ Y2aw , Y2bw , Y2cw , Y2dw ];
+% YprzedUczeniemW = round(YprzedW,0)
 
 blad = zeros(2,liczbaEpok);
-W1po = W1przed;
-W2po = W2przed;
+W1 = W1przed;
+W2 = W2przed;
 for j=1:liczbaEpok
         skutecznosc = 0;
-        
-        nrwejscia = mod(j,4)+ 1;
-        %nrwejscia = randi([1 4],1);
-
-% funkcja uczy sieæ dwuwarstwow¹ na podanym ci¹gu ucz¹cym (P,T)
-% przez zadan¹ liczbê epok (n)
-% parametry: W1przed - macierz wag warstwy 1 przed uczeniem
-% wynik: W1po – macierz wag warstwy 1 po uczeniu
-% W2po – macierz wag warstwy 2 po uczeniu
-W1 = W1po ;
-W2 = W2po ;
-wierW2 = size(W2,1) ; % liczba wierszy macierzy W2
-
-% podaj przyk³ad na wejœcia...
-X = In(:,nrwejscia) ; % wejœcia sieci
-% ...i oblicz wyjœcia
-[ Y1 , Y2 ] = dzialaj2 ( beta, bias1, bias2, W1 , W2 , X ) ;
-
-X1 = [ -1 ; X ] ; % wejœcia warstwy 1
-X2 = [ -1 ; Y1 ] ; % wejœcia warstwy 2
-D2 = Out(:,nrwejscia) - Y2; 
-D1 = W2(2:wierW2,:) * D2 ;
-
-blad(1,j) = D2(1);
-blad(2,j) = D1(1);
-funcA2 = 1 ./ ( 1 + exp ( -beta * X2) ) ;
-funcP2 = beta*(1-funcA2).*funcA2;
-
-funcA = 1 ./ ( 1 + exp ( -beta * X1) ) ;
-funcP = beta*(1-funcA).*funcA;
-
-dW1 = wspUcz * X1 * D1' .* funcP2; % oblicz poprawki wag warstwy 1
-dW2 = wspUcz * X2 * D2' .* funcP; % oblicz poprawki wag warstwy 2
-W1 = W1 + dW1 ; % dodaj poprawki do wag warstwy 1
-W2 = W2 + dW2 ; % dodaj poprawki do wag warstwy 2
-
-W1po = W1 ;
-W2po = W2 ;      
-        
-       
-       
+        %nrwejscia = mod(j,4)+ 1;
+        nrwejscia = randi([1 4],1);
+        [ W1po , W2po,blad1,blad2 ] = uczenie2 ( wspUcz, beta, bias1, bias2, W1 , W2 , In , Out , nrwejscia);
+        blad(1,j) = blad1;
+        blad(2,j) = blad2;
         % sprawdzenie dzia³ania sieci po uczeniu
         [ Y1 , Y2a ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,1) ) ;
         [ Y1 , Y2b ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,2) ) ;
         [ Y1 , Y2c ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,3) ) ;
         [ Y1 , Y2d ] = dzialaj2 ( beta, bias1, bias2, W1po , W2po , In (:,4) ) ;
         
+        W1 = W1po;
+        W2 = W2po;
         Ypo = [ Y2a , Y2b , Y2c , Y2d ];
         YpoUczeniu = round(Ypo,0);
         for i=1:4
